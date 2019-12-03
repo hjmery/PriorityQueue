@@ -3,14 +3,17 @@
 
 /*
 -----------------------------------------------------------------
+----------------------DEVELOPMENT PLAN---------------------------
+-----------------------------------------------------------------
 1.-Write the Priority Queue-Template syntax with everything-
  a. void enqueue(T value, priority_type priority)             |X|
- b. auto dequeue()										      ||
+ b. auto dequeue()										      |?|
  c. iterator find(T value)								      ||
  d. void update(iterator i, priority_type priority)		      ||
  e. bool empty()										      |X|
  f. size_type size()									      ||
 2.Write Iterator-Follow in class code
+---Where to write??? Inside Node class? Inside queue class?? Outside??
  a. iterator begin()									      ||
  b. iterator end()										      ||
  c. copy constructor									      ||
@@ -19,7 +22,6 @@
  f. move assignment operator							      ||
  g. incrementable										      ||
  h. dereferenceable										      ||
-
 -----------------------------------------------------------------
 */
 
@@ -44,6 +46,8 @@ namespace usu
             return priority;
 		}
 
+		size_type size()
+
 	  private:
         T value;
         T1 priority;
@@ -66,7 +70,10 @@ namespace usu
 			}
             else
             {
-				
+				//copy this->queue.begin() into into an iterator
+				//this->queue.erase(this->queue.begin());
+                //this->update();
+				//return copy from first line
 			}
 		}
 
