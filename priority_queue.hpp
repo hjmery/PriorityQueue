@@ -82,7 +82,7 @@ namespace usu
             }
             else
             {
-                //copy this->queue.begin() into into an iterator
+                //copy this->queue.begin() into into an iterator-How??
                 //this->queue.erase(this->queue.begin());
                 //this->update();
                 //return copy from first line
