@@ -169,7 +169,6 @@ TEST(Iterators, Dereferenceable)
     EXPECT_EQ((*first).priority, 1u);
 }
 
-
 TEST(Iterators, Incrementable)
 {
     usu::priority_queue<std::string> pq;
