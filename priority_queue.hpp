@@ -7,6 +7,7 @@
 -----------------------------------------------------------------
 1.-Write the Priority Queue-Template syntax with everything-
  a. void enqueue(T value, priority_type priority)             |?|
+ ---MAKE HEAP LOOK UP LINKS IN ASSIGNMENT
  b. auto dequeue()										      |?|
  c. iterator find(T value)								      |?|
  ---write this before the iterator
@@ -15,6 +16,7 @@
  ---how to do the update on a vector? Sort by priority?
  e. bool empty()										      |X|
  f. size_type size()									      |X|
+ ---count, keep track of enqueues and dequeues
  g.aliases													  |?|
  ---How to do this correctly? Where?
 2.Write Iterator-Follow in class code
@@ -52,7 +54,7 @@ namespace usu
             return priority;
         }
 
-      private:
+      //private:
         T value;
         T1 priority;
     };
@@ -99,8 +101,6 @@ namespace usu
                 }
             }
         }
-
-        bool wayToSort(priority_type i, priority_type j) { return i < j; }
 
         //Ask if this is the right idea for update
         void update(iterator i, priority_type priority)
