@@ -9,28 +9,28 @@
 -----------------------------------------------------------------
 1.-Write the Priority Queue-Template syntax with everything-
  a. void enqueue(T value, priority_type priority)             |?|
- ---MAKE HEAP LOOK UP LINKS IN ASSIGNMENT
+ ---MAKE HEAP LOOK UP LINKS IN ASSIGNMENT					  |X|
  b. auto dequeue()										      |?|
  c. iterator find(T value)								      |?|
  ---write this before the iterator
  ---It doesn't require that the iterator exist beforehand
- d. void update(iterator i, priority_type priority)		      |?|
+ d. void update(iterator i, priority_type priority)		      |X|
  ---how to do the update on a vector? Sort by priority?
  e. bool empty()										      |X|
  f. size_type size()									      |X|
  ---count, keep track of enqueues and dequeues
- g.aliases													  |?|
+ g.aliases													  |X|
  ---How to do this correctly? Where?
 2.Write Iterator-Follow in class code
 ---Where to write??? Inside Node class? Inside queue class?? Outside??
- a. iterator begin()									      ||
- b. iterator end()										      ||
- c. copy constructor									      ||
- d. move contsructor									      ||
- e. copy assignment operator							      ||
- f. move assignment operator							      ||
- g. incrementable										      ||
- h. dereferenceable										      ||
+ a. iterator begin()									      |?|
+ b. iterator end()										      |?|
+ c. copy constructor									      |?|
+ d. move contsructor									      |?|
+ e. copy assignment operator							      |?|
+ f. move assignment operator							      |?|
+ g. incrementable										      |?|
+ h. dereferenceable										      |?|
 -----------------------------------------------------------------
 */
 
@@ -67,6 +67,9 @@ namespace usu
         using priority_type = T1;
         using value_type = T;
         using size_type = size_t;
+        using pointer = T*;
+        using reference = T&;
+        using r_reference = T&&;
 
         //If the node is a leaf node
         //Def works if given the count and not the exact index. AKA give it index + 1
@@ -218,8 +221,19 @@ namespace usu
         //Replace int in parameters with iterator
         void update(int i, priority_type priority)
         {
-            //Sort vector according to priorities with highest priority as element 0
-            //how to use the binary predicate to sort based on priorities
+            queue[i].priority = priority;
+            if (queue[i].priority > queue[parent(i)].priority)
+            {
+                siftup(i);
+            }
+            else if (queue[i].priority < queue[rightchild(i)].priority && queue[i].priority < queue[leftchild(i)].priority)
+            {
+                siftdown(i);
+            }
+            else
+            {
+                return;
+            }
         }
 
         bool empty()
@@ -239,8 +253,114 @@ namespace usu
             return countNodes;
         }
 
+        class iterator
+        {
+          public:
+            using iterator_category = std::forward_iterator_tag;
+            iterator() :
+                m_pos(0),
+                m_data(nullptr) {}
+            //copy constructor
+            iterator(const iterator& obj);
+            //move constructor
+            iterator(const iterator&& obj);
+            iterator(pointer data) :
+                m_data(data),
+                m_pos(0) {}
+            iterator(size_type pos, pointer data) :
+                m_pos(pos),
+                m_data(data) {}
+
+            reference operator*() { return m_data[m_pos]; }
+
+            iterator operator++();
+            iterator operator++(int);
+            //copy assignment
+            iterator operator=(iterator& obj);
+            //move assignment
+            iterator operator=(iterator&& obj);
+			//Dereference with pointer operator
+			reference operator*() { return m_data[m_pos]; }
+			//Dereference with dereference operator
+            reference operator->() { return m_data[m_pos]; }
+
+            bool operator==(const iterator& rhs)
+            {
+                return m_pos == rhs.m_pos && m_data == rhs.m_data;
+            }
+
+            bool operator!=(const iterator& rhs)
+            {
+                return !operator==(rhs);
+            }
+
+          private:
+            size_type m_pos;
+            pointer m_data;
+        };
+
+        iterator begin() { return iterator(queue); }
+        iterator end() { return iterator(countNodes-1, queue); }
+
       private:
         std::vector<pqNode<T, T1>> queue;
         int countNodes;
     };
+
+    //copy constructor
+    template <typename T, typename T1>
+    priority_queue<T, T1>::iterator::iterator(const iterator& obj)
+    {
+        this->m_pos = obj.m_pos;
+        this->m_data = obj.m_data;
+    }
+
+    //move constructor
+    template <typename T, typename T1>
+    priority_queue<T, T1>::iterator::iterator(const iterator&& obj) :
+        m_data(nullptr),
+        m_pos(0)
+    {
+        this->m_pos = obj.m_pos;
+        this->m_data = obj.m_data;
+        obj.m_pos = 0;
+        obj.m_data = nullptr;
+    }
+
+    // Prefix ++i
+    template <typename T, typename T1>
+    typename priority_queue<T, T1>::iterator priority_queue<T, T1>::iterator::operator++()
+    {
+        m_pos++;
+        return *this;
+    }
+
+    // Postfix i++
+    template <typename T, typename T1>
+    typename priority_queue<T, T1>::iterator priority_queue<T, T1>::iterator::operator++(int)
+    {
+        iterator i = *this;
+        m_pos++;
+        return i;
+    }
+
+    template <typename T, typename T1>
+    typename priority_queue<T, T1>::iterator priority_queue<T, T1>::iterator::operator=(iterator& obj)
+    {
+        delete[] this->m_data;
+        this->m_pos = obj.m_pos;
+        this->m_data = obj.m_data;
+        obj.m_pos = 0;
+        obj.m_data = nullptr;
+    }
+
+    template <typename T, typename T1>
+    typename priority_queue<T, T1>::iterator priority_queue<T, T1>::iterator::operator=(iterator&& obj)
+    {
+        delete[] this->m_data;
+        this->m_pos = obj.m_pos;
+        this->m_data = obj.m_data;
+        obj.m_pos = 0;
+        obj.m_data = nullptr;
+    }
 } // namespace usu
