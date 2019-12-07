@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <initializer_list>
 #include <iostream>
 #include <vector>
 
@@ -71,6 +72,17 @@ namespace usu
         using pointer = T*;
         using reference = T&;
         using r_reference = T&&;
+
+        priority_queue() = default;
+
+        priority_queue(std::initializer_list<T> list)
+        {
+            size_type pos = 0;
+            for (auto i = list.begin(); i != list.end(); ++i, ++pos)
+            {
+                queue[pos] = *i;
+            }
+        }
 
         //If the node is a leaf node
         //Def works if given the count and not the exact index. AKA give it index + 1
@@ -181,6 +193,7 @@ namespace usu
             ++countNodes;
             //Is this where I should use the formula new size = (current size) * 1.25 + 1 ?
             //Why not just push back?
+            //Upon thinking about it I thought it would work if i push_back everytime I enqueue and pop_back everytime I dequeue so I didn't end up using the formula
         }
 
         pqNode<T, T1> dequeue()
@@ -220,16 +233,17 @@ namespace usu
 
         //Ask if this is the right idea for update
         //Replace int in parameters with iterator
-        void update(int i, priority_type priority)
+        //This definitely is wack and I know it doesn't work but it does at least take an iterator
+        void update(iterator i, priority_type priority)
         {
-            queue[i].priority = priority;
-            if (queue[i].priority > queue[parent(i)].priority)
+            i->priority = priority;
+            if (i->priority > queue[parent(i->pos)].priority)
             {
                 siftup(i);
             }
-            else if (queue[i].priority < queue[rightchild(i)].priority && queue[i].priority < queue[leftchild(i)].priority)
+            else if (i->priority < queue[rightchild(i->pos)].priority && i->priority < queue[leftchild(i->pos)].priority)
             {
-                siftdown(i);
+                siftdown(i->pos);
             }
             else
             {
