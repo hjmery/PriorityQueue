@@ -31,6 +31,7 @@
  f. move assignment operator							      |?|
  g. incrementable										      |?|
  h. dereferenceable										      |?|
+ i. relational operators									  |?|
 -----------------------------------------------------------------
 */
 
@@ -271,17 +272,15 @@ namespace usu
                 m_pos(pos),
                 m_data(data) {}
 
-            reference operator*() { return m_data[m_pos]; }
-
             iterator operator++();
             iterator operator++(int);
             //copy assignment
             iterator operator=(iterator& obj);
             //move assignment
             iterator operator=(iterator&& obj);
-			//Dereference with pointer operator
-			reference operator*() { return m_data[m_pos]; }
-			//Dereference with dereference operator
+            //Dereference with pointer operator
+            reference operator*() { return m_data[m_pos]; }
+            //Dereference with dereference operator
             reference operator->() { return m_data[m_pos]; }
 
             bool operator==(const iterator& rhs)
@@ -300,7 +299,7 @@ namespace usu
         };
 
         iterator begin() { return iterator(queue); }
-        iterator end() { return iterator(countNodes-1, queue); }
+        iterator end() { return iterator(countNodes - 1, queue); }
 
       private:
         std::vector<pqNode<T, T1>> queue;
